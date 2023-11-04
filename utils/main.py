@@ -1,16 +1,9 @@
-from functions import get_last_five_executed_operations, convert_date, convert_card, get_name_card
+from functions import load_operations, get_last_five_executed_operations, convert_date, requisites_mask
 
 if __name__ == '__main__':
     file = "operations.json"
 
-    for num in get_last_five_executed_operations(file):
-        if 'from' not in num:
-            print(f"""{convert_date(num['date'])} {num['description']}
--> {get_name_card(num['to'])} {convert_card(num['to'])}
-{num['operationAmount']['amount']} {num['operationAmount']['currency']['name']}
-""")
-        else:
-            print(f"""{convert_date(num['date'])} {num['description']}
-{get_name_card(num['from'])} {convert_card(num['from'])} -> {get_name_card(num['to'])} {convert_card(num['to'])}
-{num['operationAmount']['amount']} {num['operationAmount']['currency']['name']}
-""")
+    for operation in get_last_five_executed_operations(load_operations(file)):
+        print(f"{convert_date(operation['date'])} {operation['description']}")
+        print(f"{requisites_mask(operation.get('from'))} -> {requisites_mask(operation.get('to'))}")
+        print(f"{operation['operationAmount']['amount']} {operation['operationAmount']['currency']['name']}\n")
