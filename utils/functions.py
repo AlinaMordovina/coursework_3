@@ -11,20 +11,23 @@ def load_operations(file):
     return operations
 
 
-def get_last_five_executed_operations(file):
-    """Получаем последние 5 операций со статусом 'EXECUTED из файла."""
+def get_last_five_executed_operations(operations):
+    """Получаем последние 5 операций со статусом 'EXECUTED из cписка операций."""
 
     executed_operations = []
 
-    for operation in load_operations(file):
+    for operation in operations:
         if operation == {}:
             continue
         elif operation['state'] == 'EXECUTED':
             executed_operations.append(operation)
 
-    sort_executed_operations = sorted(executed_operations, key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)
+    sort_executed_operations = sorted(executed_operations, key=lambda x: datetime.strptime(x['date'], "%Y-%m-%dT%H:%M:%S.%f"), reverse=True)
 
-    return sort_executed_operations[0:5]
+    if len(sort_executed_operations) >= 5:
+        return sort_executed_operations[0:5]
+    else:
+        return sort_executed_operations
 
 
 def convert_date(data):
@@ -35,26 +38,23 @@ def convert_date(data):
     return convert_data.strftime('%d.%m.%Y')
 
 
-def convert_card(card):
-    """Преобразуем номер карты в нужный формат."""
+def requisites_mask(requisite):
+    """Преобразуем используемые реквизиты карты/счета в требуемый формат."""
 
-    card_number = card.split()[-1]
-
-    if 'Счет' in card:
-        private_number = (len(card_number[14:-4]) * '*') + card_number[-4:]
-
-        return "".join(private_number)
+    if requisite is None:
+        return 'Неизвестно'
 
     else:
-        private_number = card_number[:6] + (len(card_number[6:-4]) * '*') + card_number[-4:]
-        chunks, chunk_size = len(private_number), len(private_number) // 4
+        number = requisite.split()[-1]
+        name = requisite.split()[:-1]
 
-        return " ".join([private_number[i:i + chunk_size] for i in range(0, chunks, chunk_size)])
+        if 'Счет' in requisite:
+            private_number = (len(number[14:-4]) * '*') + number[-4:]
 
+            return " ".join(name) + " " + "".join(private_number)
 
-def get_name_card(card):
-    """Получаем наименование карты."""
+        else:
+            private_number = number[:6] + (len(number[6:-4]) * '*') + number[-4:]
+            parts, part = len(private_number), len(private_number) // 4
 
-    card_name = card.split()[:-1]
-
-    return " ".join(card_name)
+            return " ".join(name) + " " + " ".join([private_number[i:i + part] for i in range(0, parts, part)])
