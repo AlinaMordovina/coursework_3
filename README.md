@@ -15,6 +15,7 @@ coursework_3
 1. Клонировать проект
 
 https://github.com/AlinaMordovina/coursework_3.git
+
 2. Создать виртуальное окружения
 
 Находясь в директории проекта запустить в терминале команды:
@@ -22,6 +23,7 @@ https://github.com/AlinaMordovina/coursework_3.git
 python -m venv venv
 
 source venv/bin/activate
+
 3. Установить зависимости
 
 Все зависимости указаны в файле requirements.txt
@@ -29,6 +31,7 @@ source venv/bin/activate
 Для установки всех зависимостей из файла необходимо запустить в терминале команду:
 
 pip install -r requirements.txt
+
 4. Запустить main.py
 
 
